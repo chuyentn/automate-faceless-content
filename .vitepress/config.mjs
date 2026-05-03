@@ -248,6 +248,7 @@ const sharedSidebar = {
 }
 
 export default defineConfig({
+  outDir: '../dist',
   ignoreDeadLinks: true,
   title: 'Faceless Video Mastery',
   description: 'Complete Guide and Full Learning Course to Automating Faceless Video Content',
@@ -366,7 +367,7 @@ export default defineConfig({
     sidebar: sharedSidebar,
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/victorchuyen/automate-faceless-content' },
+      { icon: 'github', link: 'https://github.com/chuyentn/automate-faceless-content' },
     ],
 
     search: { provider: 'local' },
@@ -377,7 +378,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/victorchuyen/automate-faceless-content/edit/main/:path',
+      pattern: 'https://github.com/chuyentn/automate-faceless-content/edit/main/:path',
       text: 'Edit this page on GitHub'
     },
 

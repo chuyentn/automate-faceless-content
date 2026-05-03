@@ -16,8 +16,10 @@ let app;
 let auth;
 
 try {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
+  if (typeof window !== 'undefined' && firebaseConfig.apiKey) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+  }
 } catch (error) {
   console.error("Firebase initialization error", error);
 }

@@ -13,10 +13,14 @@ export default {
     app.component('AuthForm', AuthForm)
 
     if (typeof window !== 'undefined') {
-      onAuthStateChanged(auth, (user) => {
-        globalAuthState.value.user = user
+      if (auth) {
+        onAuthStateChanged(auth, (user) => {
+          globalAuthState.value.user = user
+          globalAuthState.value.loading = false
+        })
+      } else {
         globalAuthState.value.loading = false
-      })
+      }
 
       const loadTwemoji = () => {
         const script = document.createElement('script')
