@@ -248,7 +248,7 @@ const sharedSidebar = {
 }
 
 export default defineConfig({
-  outDir: '../dist',
+  outDir: './dist',
   ignoreDeadLinks: true,
   title: 'Faceless Video Mastery',
   description: 'Complete Guide and Full Learning Course to Automating Faceless Video Content',
