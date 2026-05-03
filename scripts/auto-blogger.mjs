@@ -69,6 +69,7 @@ async function callGemini(prompt, apiKey) {
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
     });
     const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
     return data.candidates[0].content.parts[0].text;
 }
 
@@ -89,6 +90,7 @@ async function callOpenAICompatible(prompt, apiKey, endpoint, model) {
         })
     });
     const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
     return data.choices[0].message.content;
 }
 

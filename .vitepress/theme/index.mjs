@@ -1,21 +1,24 @@
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import AuthForm from './components/AuthForm.vue'
+import AdminDashboard from './components/AdminDashboard.vue'
 import { auth } from './firebase.mjs'
 import { onAuthStateChanged } from 'firebase/auth'
 import { ref } from 'vue'
 
-export const globalAuthState = ref({ user: null, loading: true })
+export const globalAuthState = ref({ user: null, loading: true, isAdmin: false })
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app, router }) {
     app.component('AuthForm', AuthForm)
+    app.component('AdminDashboard', AdminDashboard)
 
     if (typeof window !== 'undefined') {
       if (auth) {
         onAuthStateChanged(auth, (user) => {
           globalAuthState.value.user = user
+          globalAuthState.value.isAdmin = user?.uid === '6FzFMjZJPMfqU7fLzuY5th5wQnx2' || user?.email === 'tranngocchuyen1980@gmail.com'
           globalAuthState.value.loading = false
         })
       } else {

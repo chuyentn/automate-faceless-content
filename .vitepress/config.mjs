@@ -227,6 +227,7 @@ const sharedSidebar = {
       items: [
         { text: 'Tools & Integrations', link: '/guides/resources/tools-integrations' },
         { text: 'ChatGPT Integration', link: '/guides/resources/chatgpt-integration' },
+        { text: 'Cloudflare Env Vars', link: '/guides/resources/cloudflare-env-vars' },
         { text: 'FAQ', link: '/guides/resources/faq' },
         { text: 'Troubleshooting', link: '/guides/resources/troubleshooting' },
         { text: 'Credit Management', link: '/guides/resources/credit-management' },
