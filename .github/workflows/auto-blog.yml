@@ -34,6 +34,8 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           MY_AFFILIATE_LINK: ${{ secrets.MY_AFFILIATE_LINK }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node scripts/auto-blogger.mjs
 
       - name: Commit và Đẩy bài viết mới lên GitHub

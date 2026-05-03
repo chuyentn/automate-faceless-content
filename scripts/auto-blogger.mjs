@@ -23,6 +23,8 @@ const OPENAI_KEY = process.env.OPENAI_API_KEY;
 const GROQ_KEY = process.env.GROQ_API_KEY;
 const OPENROUTER_KEY = process.env.OPENROUTER_API_KEY;
 const AFFILIATE_LINK = process.env.MY_AFFILIATE_LINK || 'https://syllaby.io/?via=victorchuyen68';
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 /**
  * Gọi API tới model đã chọn để viết bài
@@ -42,7 +44,10 @@ Yêu cầu định dạng:
 
     try {
         if (ACTIVE_MODEL === 'gemini' && GEMINI_KEY) {
-            return await callGemini(prompt, GEMINI_KEY);
+            // Hỗ trợ đa key: nếu người dùng nhập nhiều key (xuống dòng hoặc phẩy), chọn random 1 key
+            const keys = GEMINI_KEY.split(/[\n,]+/).map(k => k.trim()).filter(k => k);
+            const randomKey = keys[Math.floor(Math.random() * keys.length)];
+            return await callGemini(prompt, randomKey);
         } else if (ACTIVE_MODEL === 'openai' && OPENAI_KEY) {
             return await callOpenAICompatible(prompt, OPENAI_KEY, 'https://api.openai.com/v1/chat/completions', 'gpt-3.5-turbo');
         } else if (ACTIVE_MODEL === 'groq' && GROQ_KEY) {
@@ -95,6 +100,42 @@ async function callOpenAICompatible(prompt, apiKey, endpoint, model) {
 }
 
 /**
+ * Gửi tin nhắn tự động lên Telegram
+ */
+async function sendTelegramMessage(title, fileSlug) {
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+        console.log('⚠️ Bỏ qua gửi Telegram vì chưa cấu hình Bot Token/Chat ID.');
+        return;
+    }
+    
+    // Link tới bài viết trên trang web (ví dụ: https://edu.tnc.io.vn/tools/ten-bai-viet)
+    const postUrl = `https://edu.tnc.io.vn/tools/${fileSlug}`;
+    
+    const message = `🔥 *BÀI VIẾT MỚI:*\n\n📰 *${title}*\n\n👉 [Đọc chi tiết và nhận bộ công cụ tại đây](${postUrl})\n\n💡 *Bí kíp Faceless Video tự động!*`;
+    
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown'
+            })
+        });
+        const data = await res.json();
+        if (data.ok) {
+            console.log('✅ Đã gửi thông báo lên Telegram thành công!');
+        } else {
+            console.error('❌ Lỗi gửi Telegram:', data.description);
+        }
+    } catch (e) {
+        console.error('❌ Lỗi kết nối Telegram:', e.message);
+    }
+}
+
+/**
  * Hàm chính chạy Auto-Blogger
  */
 async function runAutoBlogger() {
@@ -123,11 +164,16 @@ ${aiContent}
 `;
 
     // Lưu thành file .md vào thư mục tools
-    const fileName = latestPost.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.md';
+    const fileSlug = latestPost.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const fileName = fileSlug + '.md';
     const filePath = path.join(process.cwd(), 'tools', fileName);
     
     fs.writeFileSync(filePath, finalContent, 'utf8');
     console.log(`✅ Đã tạo thành công bài blog mới: /tools/${fileName}`);
+    
+    // Gửi thông báo lên mạng xã hội (Telegram)
+    console.log('📢 Đang đẩy bài lên Telegram...');
+    await sendTelegramMessage(latestPost.title, fileSlug);
 }
 
 runAutoBlogger();
