@@ -1,0 +1,46 @@
+name: Auto-Blogger Daily Run
+
+on:
+  schedule:
+    # Chạy vào 01:00 UTC mỗi ngày (tương đương 08:00 sáng giờ Việt Nam)
+    - cron: '0 1 * * *'
+  
+  # Cho phép chạy thủ công từ tab Actions trên GitHub
+  workflow_dispatch:
+
+jobs:
+  run-auto-blogger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kiểm tra mã nguồn (Checkout repo)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cài đặt thư viện (Install Dependencies)
+        run: npm install
+
+      - name: Chạy Bot Viết Bài Bằng AI (Run Auto-Blogger)
+        env:
+          ACTIVE_MODEL: ${{ secrets.ACTIVE_MODEL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          MY_AFFILIATE_LINK: ${{ secrets.MY_AFFILIATE_LINK }}
+        run: node scripts/auto-blogger.mjs
+
+      - name: Commit và Đẩy bài viết mới lên GitHub
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add tools/*.md
+          # Chỉ commit nếu có file mới
+          git diff --quiet && git diff --staged --quiet || git commit -m "📝 Auto-Blogger: Đăng bài viết review AI mới"
+          git push

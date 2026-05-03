@@ -1,0 +1,36 @@
+/* Twemoji flag icon styling */
+img.emoji {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: -0.15em;
+  margin-right: 0.3em;
+  pointer-events: none;
+}
+
+/* Language switcher dropdown flags */
+.VPMenu .VPMenuLink img.emoji,
+.VPNavBarMenu img.emoji,
+.VPFlyout img.emoji {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: -0.2em;
+}
+
+/* Site title emoji */
+.VPNavBarTitle img.emoji {
+  width: 1.3em;
+  height: 1.3em;
+}
+
+/* Hero section emoji */
+.VPHero .name img.emoji {
+  width: 1em;
+  height: 1em;
+}
+
+/* Feature card emoji */
+.VPFeature .icon img.emoji {
+  width: 2em;
+  height: 2em;
+}

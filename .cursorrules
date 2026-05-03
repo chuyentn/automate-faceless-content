@@ -1,0 +1,25 @@
+# AI Assistant Rules for Automate Faceless Content Project
+
+Whenever you add new code or make significant changes to this project, you MUST follow this A-Z automated workflow to ensure code quality and deployment:
+
+## 1. CHECK & FIX (A-Z Check)
+- Always review your code for syntax errors and logic bugs before finalizing.
+- Run `npm run build` to verify that the VitePress site builds successfully without any errors.
+- If there are errors, FIX them immediately until the build passes.
+
+## 2. PASS & INSTALL
+- Ensure all tests and builds pass.
+- If new dependencies were added, run `npm install` to update the `package-lock.json` and ensure everything is correctly linked.
+
+## 3. UP GITHUB
+- Use `git status` to check changed files.
+- Stage changes using `git add .`
+- Commit changes with a descriptive message: `git commit -m "feat/fix: description"`
+- Push the code to the repository: `git push origin main`
+
+## 4. DEPLOY CLOUDFLARE PAGE
+- Cloudflare Pages is typically configured to auto-deploy upon a `git push` to the `main` branch.
+- If manual deployment is required via CLI, run:
+  `npx wrangler pages deploy .vitepress/dist --project-name automate-faceless-content`
+  
+Always remind the user when you are executing these deployment steps.
